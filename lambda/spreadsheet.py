@@ -102,3 +102,6 @@ class Spreadsheet:
             raise SpreadsheetException("Invalid day")
 
         return {day: content.get(day)}
+
+    def save_to_file(self, file_path, content):
+        open(file_path or "data.json", "w").write(content)
