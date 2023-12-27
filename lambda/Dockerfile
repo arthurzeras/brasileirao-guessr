@@ -6,6 +6,6 @@ RUN poetry config virtualenvs.create false
 COPY pyproject.toml poetry.lock ${LAMBDA_TASK_ROOT}
 RUN poetry install --no-root
 
-COPY spreadsheet.py auth_google.py function.py ${LAMBDA_TASK_ROOT}
+COPY . ${LAMBDA_TASK_ROOT}
 
 CMD [ "function.handler" ]
