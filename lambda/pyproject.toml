@@ -1,0 +1,14 @@
+[tool.black]
+line-length = 80
+
+[tool.poetry]
+name = "brasileirao-guessr"
+version = "0.1.0"
+description = ""
+authors = ["Arthur Oliveira <arthurolvmorais@gmail.com>"]
+readme = "README.md"
+packages = [{include = "brasileirao_guessr"}]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
