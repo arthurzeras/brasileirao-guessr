@@ -1,0 +1,3 @@
+{
+  "prettier.prettierPath": "./client/node_modules/prettier",
+}
