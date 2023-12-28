@@ -20,10 +20,12 @@ class SpreadsheetException(Exception):
 class Spreadsheet:
     __access_token = None
     logger = logging.getLogger()
+    content = {}
 
     def __init__(self):
         self.logger.setLevel("INFO")
         self.__get_access_token()
+        self.get_sheet_content()
 
     def __get_access_token(self):
         auth_google = AuthGoogle(SPREADSHEET_SCOPES)
@@ -82,15 +84,13 @@ class Spreadsheet:
             self.logger.error(response.text)
             raise SpreadsheetException()
 
-        return self.__format_values(response.json())
+        self.content = self.__format_values(response.json())
 
     def get_day_values(self, day):
         """
         Get daily game filtered by day expression in format DD/MM/YYYY
         """
-        content = self.get_sheet_content()
-
-        if not len(content.keys()):
+        if not len(self.content.keys()):
             raise SpreadsheetException("No values found")
 
         if not day:
@@ -98,10 +98,21 @@ class Spreadsheet:
             today = datetime.now() - timedelta(hours=3)
             day = today.strftime("%d/%m/%Y")
 
-        if day not in content.keys():
+        if day not in self.content.keys():
             raise SpreadsheetException("Invalid day")
 
-        return {"day": day, **content.get(day)}
+        return {"day": day, **self.content.get(day)}
+
+    def get_all_available_teams(self):
+        """
+        Get all available teams on spreadsheet (no repeated)
+        """
+        teams = set()
+
+        for day in self.content.keys():
+            teams.add(self.content[day].get("team"))
+
+        return list(teams)
 
     def save_to_file(self, file_path, content):
         open(file_path or "data.json", "w").write(content)

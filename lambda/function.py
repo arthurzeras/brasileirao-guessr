@@ -28,8 +28,13 @@ def handler(event, context):
     try:
         spreadsheet = Spreadsheet()
         response = spreadsheet.get_day_values(day_filter)
+        all_teams = spreadsheet.get_all_available_teams()
         logger.info(f"Response: {response}")
-        return {"statusCode": 200, "body": json.dumps(response)}
+
+        return {
+            "statusCode": 200,
+            "body": json.dumps({"game": response, "all_teams": all_teams}),
+        }
     except (AuthGoogleException, SpreadsheetException) as error:
         logger.error(error)
         return {"statusCode": 400, "body": str(error) or "Failed to get info"}
