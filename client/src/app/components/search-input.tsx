@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { getDailyGame, GetDailyGameResponse } from "../actions";
 
 const removeSpecialCharacter = (str: string) => {
   return str
@@ -13,11 +14,25 @@ const removeSpecialCharacter = (str: string) => {
     .replace(/[-\s]/, "");
 };
 
-export default function SearchInput(props: { teams: string[] }) {
+export default function SearchInput() {
+  const dailyGame = useRef<GetDailyGameResponse>();
+  const containerRef = useRef<HTMLDivElement>(null);
+
   const [inputValue, setInputValue] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [teamsFiltered, setTeamsFiltered] = useState(props.teams || []);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const [teamsFiltered, setTeamsFiltered] = useState<string[]>([]);
+
+  useEffect(() => {
+    getDailyGame().then((response) => {
+      if ("failed" in response) {
+        console.error(response.message);
+        return;
+      }
+
+      dailyGame.current = response;
+      setTeamsFiltered((dailyGame.current?.all_teams || []).sort());
+    });
+  }, []);
 
   useEffect(() => {
     const listenerHandler = (event: Event) => {
@@ -35,14 +50,16 @@ export default function SearchInput(props: { teams: string[] }) {
   const filterTeams = (value: string) => {
     setInputValue(value);
 
-    const filteredTeams = props.teams.filter((team) => {
-      const teamName = removeSpecialCharacter(team);
-      const inputValue = removeSpecialCharacter(value);
+    const filteredTeams = (dailyGame.current?.all_teams || []).filter(
+      (team) => {
+        const teamName = removeSpecialCharacter(team);
+        const inputValue = removeSpecialCharacter(value);
 
-      return new RegExp(inputValue, "gi").test(teamName);
-    });
+        return new RegExp(inputValue, "gi").test(teamName);
+      },
+    );
 
-    setTeamsFiltered(filteredTeams);
+    setTeamsFiltered(filteredTeams.sort());
   };
 
   const selectTeam = (team: string) => {
@@ -53,7 +70,7 @@ export default function SearchInput(props: { teams: string[] }) {
   const renderDialog = () => {
     if (dialogOpen) {
       return (
-        <div className="absolute w-full bg-white shadow-md border rounded-md">
+        <div className="absolute w-full bg-white shadow-md border rounded-md max-h-80 overflow-y-auto">
           <ul>
             {teamsFiltered.map((team) => (
               <li

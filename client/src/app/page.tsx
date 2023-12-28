@@ -1,8 +1,8 @@
+import { getDailyGame } from "./actions";
 import SearchInput from "./components/search-input";
 
 export default async function Home() {
-  const response = await fetch(process.env.DAY_GAME_ENDPOINT || "");
-  const result = await response.json();
+  await getDailyGame();
 
   return (
     <main className="flex justify-center h-screen">
@@ -10,8 +10,7 @@ export default async function Home() {
         <h1 className="text-3xl font-medium text-center">
           ⚽ Brasileirão Guessr
         </h1>
-
-        <SearchInput teams={result.all_teams} />
+        <SearchInput />
       </section>
     </main>
   );
