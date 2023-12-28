@@ -37,7 +37,15 @@ def handler(event, context):
         }
     except (AuthGoogleException, SpreadsheetException) as error:
         logger.error(error)
-        return {"statusCode": 400, "body": str(error) or "Failed to get info"}
+        return {
+            "statusCode": 400,
+            "body": json.dumps(
+                {"message": str(error) or "Failed to get daily game"}
+            ),
+        }
     except Exception as error:
         logger.error(error)
-        return {"statusCode": 500, "body": "Failed to get info"}
+        return {
+            "statusCode": 500,
+            "body": json.dumps({"message": "Failed to get daily game"}),
+        }
