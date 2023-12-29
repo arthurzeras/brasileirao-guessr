@@ -84,25 +84,29 @@ export default function Game() {
     ));
   }
 
-  function getScore() {
-    const blocks = Array.from<string>({ length: TOTAL_ATTEMPTS + 1 }).fill(
-      "⬛",
-    );
+  function getScore(
+    defaultString: string,
+    winString: string,
+    loseString: string,
+  ) {
     const winInAttempts = TOTAL_ATTEMPTS - remainingAttempts;
+    const blocks = Array.from<string>({ length: TOTAL_ATTEMPTS + 1 }).fill(
+      defaultString,
+    );
 
-    if (remainingAttempts === 0) {
-      blocks[winInAttempts] = gameWin ? "🟩" : "🟥";
+    if (gameWin) {
+      blocks[winInAttempts] = winString;
     }
 
     for (let i = 0; i < winInAttempts; i++) {
-      blocks[i] = "🟥";
+      blocks[i] = loseString;
     }
 
     return blocks;
   }
 
   function renderShareButton() {
-    const score = getScore();
+    const score = getScore("⬛", "🟩", "🟥");
     const label = `Meu resultado no Brasileirão Guessr hoje: ${score.join("")}`;
 
     if (gameOver || gameWin) {
@@ -115,6 +119,36 @@ export default function Game() {
         >
           Compartilhar resultado
         </button>
+      );
+    }
+
+    return null;
+  }
+
+  function renderScore() {
+    if (gameOver || gameWin) {
+      const score = getScore("slate", "green", "red");
+      const listToRender = score.map((color, index) => {
+        const colorMap: Record<string, string[]> = {
+          red: ["text-red-600", "bg-red-300", "border-red-300"],
+          slate: ["text-slate-600", "bg-slate-300", "border-slate-300"],
+          green: ["text-green-600", "bg-green-300", "border-green-300"],
+        };
+
+        const colorClasses = colorMap[color].join(" ");
+
+        return (
+          <span
+            key={index}
+            className={`${colorClasses} text-lg rounded-md border px-2`}
+          >
+            {index + 1}
+          </span>
+        );
+      });
+
+      return (
+        <div className="flex mt-2 gap-2 justify-center">{listToRender}</div>
       );
     }
 
@@ -145,6 +179,7 @@ export default function Game() {
   return (
     <section>
       <>{renderGame()}</>
+      <>{renderScore()}</>
       <>{renderShareButton()}</>
     </section>
   );
