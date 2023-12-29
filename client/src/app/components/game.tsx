@@ -2,6 +2,7 @@
 
 import TipCard from "./tip-card";
 import GameEnd from "./game-end";
+import { storage } from "../storage";
 import XMarkIcon from "./icons/x-mark";
 import AnswerForm from "./answer-form";
 import { useEffect, useState } from "react";
@@ -27,6 +28,28 @@ export default function Game() {
       setDailyGame(response);
     });
   }, []);
+
+  useEffect(() => {
+    if (dailyGame) {
+      storage.saveAnswer({
+        gameWin,
+        gameOver,
+        teamsAttempted,
+        remainingAttempts,
+        day: dailyGame.game.day,
+      });
+    }
+  });
+
+  useEffect(() => {
+    const storageValues = storage.getToday();
+    if (storageValues) {
+      setGameWin(storageValues.gameWin);
+      setGameOver(storageValues.gameOver);
+      setTeamsAttempted(storageValues.teamsAttempted);
+      setRemainingAttempts(storageValues.remainingAttempts);
+    }
+  }, [setGameWin, setGameOver, setTeamsAttempted, setRemainingAttempts]);
 
   function checkAnswer(answer: string) {
     if (answer === dailyGame?.game?.team) {
