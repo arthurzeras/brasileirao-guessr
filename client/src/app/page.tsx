@@ -1,5 +1,5 @@
+import Game from "./components/game";
 import { getDailyGame } from "./actions";
-import SearchInput from "./components/search-input";
 import DailyGameBox from "./components/daily-game-box";
 
 export default async function Home() {
@@ -13,9 +13,7 @@ export default async function Home() {
         </h1>
 
         <DailyGameBox />
-
-        {/* <code>{JSON.stringify(result, null, 2)}</code> */}
-        <SearchInput />
+        <Game />
       </section>
     </main>
   );

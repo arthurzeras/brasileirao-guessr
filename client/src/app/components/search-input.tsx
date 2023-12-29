@@ -14,7 +14,11 @@ const removeSpecialCharacter = (str: string) => {
     .replace(/[-\s]/, "");
 };
 
-export default function SearchInput() {
+export default function SearchInput({
+  teamChanged,
+}: {
+  teamChanged: (team: string) => void;
+}) {
   const dailyGame = useRef<GetDailyGameResponse>();
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -65,6 +69,7 @@ export default function SearchInput() {
   const selectTeam = (team: string) => {
     setInputValue(team);
     setDialogOpen(false);
+    teamChanged(team);
   };
 
   const renderDialog = () => {
@@ -96,7 +101,7 @@ export default function SearchInput() {
         value={inputValue}
         onFocus={() => setDialogOpen(true)}
         placeholder="Digite o time aqui..."
-        className="w-full border-2 h-10 px-4 rounded-md shadow-sm"
+        className="w-full border-2 h-12 px-4 rounded-md shadow-sm"
         onChange={(event) =>
           filterTeams((event.target as HTMLInputElement).value)
         }
