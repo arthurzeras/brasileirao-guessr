@@ -1,7 +1,12 @@
 "use client";
 
+import EventBus from "../bus";
 import { useEffect, useRef, useState } from "react";
 import { getDailyGame, GetDailyGameResponse } from "../actions";
+
+interface SearchInputProps {
+  teamChanged: (team: string) => void;
+}
 
 const removeSpecialCharacter = (str: string) => {
   return str
@@ -14,17 +19,17 @@ const removeSpecialCharacter = (str: string) => {
     .replace(/[-\s]/, "");
 };
 
-export default function SearchInput({
-  teamChanged,
-}: {
-  teamChanged: (team: string) => void;
-}) {
+export default function SearchInput({ teamChanged }: SearchInputProps) {
   const dailyGame = useRef<GetDailyGameResponse>();
   const containerRef = useRef<HTMLDivElement>(null);
 
   const [inputValue, setInputValue] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [teamsFiltered, setTeamsFiltered] = useState<string[]>([]);
+
+  EventBus.$on("ANSWER_SUBMITED", () => {
+    setInputValue("");
+  });
 
   useEffect(() => {
     getDailyGame().then((response) => {
