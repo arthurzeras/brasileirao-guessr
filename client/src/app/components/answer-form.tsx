@@ -1,18 +1,25 @@
 "use client";
 
 import EventBus from "../bus";
+import { useState } from "react";
 import SearchInput from "./search-input";
-import { FormEvent, useRef } from "react";
 
 interface AnswerFormProps {
   answerReceived: (team: string) => void;
 }
 
-function SubmitButton() {
+interface SubmitButtonProps {
+  disabled: boolean;
+  onClick: () => void;
+}
+
+function SubmitButton({ disabled, onClick }: SubmitButtonProps) {
   return (
     <button
-      type="submit"
-      className="w-full mt-2 text-center bg-green-500 border-green-600 border h-12 px-4 rounded-md shadow-sm font-medium"
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      className="w-full mt-2 text-center bg-green-500 border-green-600 disabled:bg-green-200 disabled:border-green-300 disabled:cursor-not-allowed hover:bg-green-700 border h-12 px-4 rounded-md shadow-sm font-medium"
     >
       ENVIAR
     </button>
@@ -20,22 +27,17 @@ function SubmitButton() {
 }
 
 export default function AnswerForm({ answerReceived }: AnswerFormProps) {
-  const teamSelected = useRef("");
+  const [teamSelected, setTeamSelected] = useState("");
 
-  const submitHandler = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    answerReceived(teamSelected.current);
-    EventBus.$emit("ANSWER_SUBMITED", { team: teamSelected.current });
-  };
-
-  const teamChanged = (team: string) => {
-    teamSelected.current = team;
+  const submitHandler = () => {
+    answerReceived(teamSelected);
+    EventBus.$emit("ANSWER_SUBMITED", { team: teamSelected });
   };
 
   return (
-    <form onSubmit={submitHandler}>
-      <SearchInput teamChanged={teamChanged} />
-      <SubmitButton />
+    <form onSubmit={(event) => event.preventDefault()}>
+      <SearchInput teamChanged={setTeamSelected} />
+      <SubmitButton disabled={!teamSelected} onClick={submitHandler} />
     </form>
   );
 }

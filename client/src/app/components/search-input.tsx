@@ -28,6 +28,7 @@ export default function SearchInput({ teamChanged }: SearchInputProps) {
   const [teamsFiltered, setTeamsFiltered] = useState<string[]>([]);
 
   EventBus.$on("ANSWER_SUBMITED", ({ team }: { team: string }) => {
+    teamChanged("");
     setInputValue("");
     setTeamsFiltered(teamsFiltered.filter((_team) => _team !== team));
   });
@@ -60,14 +61,15 @@ export default function SearchInput({ teamChanged }: SearchInputProps) {
   const filterTeams = (value: string) => {
     setInputValue(value);
 
-    const filteredTeams = (dailyGame.current?.all_teams || []).filter(
-      (team) => {
-        const teamName = removeSpecialCharacter(team);
-        const inputValue = removeSpecialCharacter(value);
+    let filteredTeams = (dailyGame.current?.all_teams || []).filter((team) => {
+      const teamName = removeSpecialCharacter(team);
+      const inputValue = removeSpecialCharacter(value);
+      return new RegExp(inputValue, "gi").test(teamName);
+    });
 
-        return new RegExp(inputValue, "gi").test(teamName);
-      },
-    );
+    if (filteredTeams.length === 0) {
+      filteredTeams = dailyGame.current?.all_teams || [];
+    }
 
     setTeamsFiltered(filteredTeams.sort());
   };
