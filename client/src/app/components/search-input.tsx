@@ -23,6 +23,7 @@ export default function SearchInput({ teamChanged }: SearchInputProps) {
   const dailyGame = useRef<GetDailyGameResponse>();
   const containerRef = useRef<HTMLDivElement>(null);
 
+  const [loading, setLoading] = useState(true);
   const [inputValue, setInputValue] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [teamsFiltered, setTeamsFiltered] = useState<string[]>([]);
@@ -34,15 +35,17 @@ export default function SearchInput({ teamChanged }: SearchInputProps) {
   });
 
   useEffect(() => {
-    getDailyGame().then((response) => {
-      if ("failed" in response) {
-        console.error(response.message);
-        return;
-      }
+    getDailyGame()
+      .then((response) => {
+        if ("failed" in response) {
+          console.error(response.message);
+          return;
+        }
 
-      dailyGame.current = response;
-      setTeamsFiltered((dailyGame.current?.all_teams || []).sort());
-    });
+        dailyGame.current = response;
+        setTeamsFiltered((dailyGame.current?.all_teams || []).sort());
+      })
+      .finally(() => setLoading(false));
   }, []);
 
   useEffect(() => {
@@ -81,20 +84,22 @@ export default function SearchInput({ teamChanged }: SearchInputProps) {
   };
 
   const renderDialog = () => {
+    const listItems = teamsFiltered.map((team) => (
+      <li
+        key={team}
+        onClick={() => selectTeam(team)}
+        className="p-2 hover:bg-slate-100 cursor-pointer"
+      >
+        {team}
+      </li>
+    ));
+
+    const loadingFeedback = <li className="p-2">Carregando...</li>;
+
     if (dialogOpen) {
       return (
         <div className="absolute w-full bg-white shadow-md border rounded-md max-h-80 overflow-y-auto">
-          <ul>
-            {teamsFiltered.map((team) => (
-              <li
-                key={team}
-                onClick={() => selectTeam(team)}
-                className="p-2 hover:bg-slate-100 cursor-pointer"
-              >
-                {team}
-              </li>
-            ))}
-          </ul>
+          <ul>{loading ? loadingFeedback : listItems}</ul>
         </div>
       );
     }
