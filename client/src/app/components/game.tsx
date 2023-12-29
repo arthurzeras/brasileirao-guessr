@@ -84,6 +84,43 @@ export default function Game() {
     ));
   }
 
+  function getScore() {
+    const blocks = Array.from<string>({ length: TOTAL_ATTEMPTS + 1 }).fill(
+      "⬛",
+    );
+    const winInAttempts = TOTAL_ATTEMPTS - remainingAttempts;
+
+    if (remainingAttempts === 0) {
+      blocks[winInAttempts] = gameWin ? "🟩" : "🟥";
+    }
+
+    for (let i = 0; i < winInAttempts; i++) {
+      blocks[i] = "🟥";
+    }
+
+    return blocks;
+  }
+
+  function renderShareButton() {
+    const score = getScore();
+    const label = `Meu resultado no Brasileirão Guessr hoje: ${score.join("")}`;
+
+    if (gameOver || gameWin) {
+      return (
+        <button
+          className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 mt-4 rounded mx-auto block border-blue-700"
+          onClick={() => {
+            navigator.clipboard.writeText(label);
+          }}
+        >
+          Compartilhar resultado
+        </button>
+      );
+    }
+
+    return null;
+  }
+
   function renderGame() {
     if (gameOver) {
       return <GameEnd answer={dailyGame?.game.team || ""} correct={false} />;
@@ -105,5 +142,10 @@ export default function Game() {
     );
   }
 
-  return <section>{renderGame()}</section>;
+  return (
+    <section>
+      <>{renderGame()}</>
+      <>{renderShareButton()}</>
+    </section>
+  );
 }

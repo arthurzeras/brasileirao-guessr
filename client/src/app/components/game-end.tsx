@@ -5,11 +5,12 @@ interface GameEndInterface {
 
 export default function GameEnd({ answer, correct }: GameEndInterface) {
   const cardClasses = [
+    "py-4",
     "bg-white",
     "border-4",
+    "shadow-md",
     "rounded-md",
     "text-center",
-    "shadow-md py-4",
     correct ? "border-green-500" : "border-red-500",
   ].join(" ");
 
