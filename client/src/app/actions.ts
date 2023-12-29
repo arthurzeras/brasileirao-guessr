@@ -1,5 +1,7 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
+
 export interface GetDailyGameResponse {
   all_teams: string[];
   game: {
@@ -30,20 +32,34 @@ export interface GetDailyGameError {
   message: string;
 }
 
+/**
+ * Revalidate cache if the cached game day is not the current day.
+ */
+function revalidateCache(result: GetDailyGameResponse) {
+  const cachedGameDay = result.game.day.split("/")[0];
+  const currentDay = new Date().toLocaleDateString("pt-BR").split("/")[0];
+
+  if (cachedGameDay !== currentDay) {
+    revalidatePath("/");
+  }
+}
+
 export async function getDailyGame(): Promise<
   GetDailyGameResponse | GetDailyGameError
 > {
-  const response = await fetch(process.env.DAY_GAME_ENDPOINT || "", {
-    cache: "no-cache",
-  });
+  const response = await fetch(process.env.DAY_GAME_ENDPOINT || "");
 
   if (!response.ok) {
     const error = await response.json();
     return {
       failed: true,
-      message: error.message || "Failed to get content from Google Sheets",
+      message: error.message || "Failed to get daily game",
     };
   }
 
-  return response.json();
+  const result = await response.json();
+
+  revalidateCache(result);
+
+  return result;
 }
