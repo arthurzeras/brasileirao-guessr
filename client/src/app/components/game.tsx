@@ -1,6 +1,7 @@
 "use client";
 
 import TipCard from "./tip-card";
+import GameOver from "./game-over";
 import XMarkIcon from "./icons/x-mark";
 import AnswerForm from "./answer-form";
 import { useEffect, useState } from "react";
@@ -9,6 +10,7 @@ import { getDailyGame, GetDailyGameResponse } from "../actions";
 const TOTAL_ATTEMPTS = 5;
 
 export default function Game() {
+  const [gameOver, setGameOver] = useState(false);
   const [dailyGame, setDailyGame] = useState<GetDailyGameResponse>();
   const [teamsAttempted, setTeamsAttempted] = useState<string[]>([]);
   const [remainingAttempts, setRemainingAttempts] = useState(TOTAL_ATTEMPTS);
@@ -34,7 +36,7 @@ export default function Game() {
     setTeamsAttempted([...teamsAttempted, answer]);
 
     if (remainingAttempts === 0) {
-      console.log("Perdeu!");
+      setGameOver(true);
     }
   }
 
@@ -81,12 +83,22 @@ export default function Game() {
     ));
   }
 
-  return (
-    <section>
-      {renderTips()}
-      <div className="text-center mb-3 text-sm">{remainingAttemptsLabel()}</div>
-      <AnswerForm answerReceived={checkAnswer} />
-      <div className="mt-3 flex flex-col gap-2">{renderTeamsAttempted()}</div>
-    </section>
-  );
+  function renderGame() {
+    if (gameOver) {
+      return <GameOver answer={dailyGame?.game.team || ""} />;
+    }
+
+    return (
+      <>
+        {renderTips()}
+        <div className="text-center mb-3 text-sm">
+          {remainingAttemptsLabel()}
+        </div>
+        <AnswerForm answerReceived={checkAnswer} />
+        <div className="mt-3 flex flex-col gap-2">{renderTeamsAttempted()}</div>
+      </>
+    );
+  }
+
+  return <section>{renderGame()}</section>;
 }
