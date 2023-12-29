@@ -28,9 +28,7 @@ export default function TipCard({ tipNumber, dailyGame }: TipCardProps) {
   }
 
   return (
-    <div
-      className={`bg-amber-300 border border-amber-600 rounded-md px-3 py-4 shadow-sm text-md`}
-    >
+    <div className="bg-amber-300 border border-amber-600 rounded-md px-3 py-4 shadow-sm text-md">
       Dica {tipNumber}: {getTip()}
     </div>
   );

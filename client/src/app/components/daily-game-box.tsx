@@ -1,4 +1,4 @@
-import { getDailyGame, GetDailyGameResponse } from "../actions";
+import { getDailyGame } from "../actions";
 
 export default async function DailyGameBox() {
   const result = await getDailyGame();
