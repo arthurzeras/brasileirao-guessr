@@ -1,7 +1,7 @@
 "use client";
 
 import TipCard from "./tip-card";
-import GameOver from "./game-over";
+import GameEnd from "./game-end";
 import XMarkIcon from "./icons/x-mark";
 import AnswerForm from "./answer-form";
 import { useEffect, useState } from "react";
@@ -10,6 +10,7 @@ import { getDailyGame, GetDailyGameResponse } from "../actions";
 const TOTAL_ATTEMPTS = 5;
 
 export default function Game() {
+  const [gameWin, setGameWin] = useState(false);
   const [gameOver, setGameOver] = useState(false);
   const [dailyGame, setDailyGame] = useState<GetDailyGameResponse>();
   const [teamsAttempted, setTeamsAttempted] = useState<string[]>([]);
@@ -28,7 +29,7 @@ export default function Game() {
 
   function checkAnswer(answer: string) {
     if (answer === dailyGame?.game?.team) {
-      console.log("Acertou!");
+      setGameWin(true);
       return;
     }
 
@@ -85,7 +86,11 @@ export default function Game() {
 
   function renderGame() {
     if (gameOver) {
-      return <GameOver answer={dailyGame?.game.team || ""} />;
+      return <GameEnd answer={dailyGame?.game.team || ""} correct={false} />;
+    }
+
+    if (gameWin) {
+      return <GameEnd answer={dailyGame?.game.team || ""} correct={true} />;
     }
 
     return (
