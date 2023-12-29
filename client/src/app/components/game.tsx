@@ -14,6 +14,7 @@ export default function Game() {
   const [gameOver, setGameOver] = useState(false);
   const [dailyGame, setDailyGame] = useState<GetDailyGameResponse>();
   const [teamsAttempted, setTeamsAttempted] = useState<string[]>([]);
+  const [shareButtonClicked, setShareButtonClicked] = useState(false);
   const [remainingAttempts, setRemainingAttempts] = useState(TOTAL_ATTEMPTS);
 
   useEffect(() => {
@@ -106,18 +107,26 @@ export default function Game() {
   }
 
   function renderShareButton() {
-    const score = getScore("⬛", "🟩", "🟥");
-    const label = `Meu resultado no Brasileirão Guessr hoje: ${score.join("")}`;
-
     if (gameOver || gameWin) {
+      const score = getScore("⬛", "🟩", "🟥");
+      const label = `Meu resultado no Brasileirão Guessr hoje: ${score.join(
+        "",
+      )}`;
+
+      const handleButtonClick = () => {
+        navigator.clipboard.writeText(label);
+        setShareButtonClicked(true);
+        setTimeout(() => {
+          setShareButtonClicked(false);
+        }, 2000);
+      };
+
       return (
         <button
+          onClick={handleButtonClick}
           className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 mt-4 rounded mx-auto block border-blue-700"
-          onClick={() => {
-            navigator.clipboard.writeText(label);
-          }}
         >
-          Compartilhar resultado
+          {shareButtonClicked ? "Copiado!" : "Compartilhar resultado"}
         </button>
       );
     }
