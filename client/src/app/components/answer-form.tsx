@@ -25,7 +25,7 @@ export default function AnswerForm({ answerReceived }: AnswerFormProps) {
   const submitHandler = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     answerReceived(teamSelected.current);
-    EventBus.$emit("ANSWER_SUBMITED");
+    EventBus.$emit("ANSWER_SUBMITED", { team: teamSelected.current });
   };
 
   const teamChanged = (team: string) => {

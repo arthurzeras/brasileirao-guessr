@@ -5,7 +5,7 @@ class _EventBus {
     delete this.bus[id];
   }
 
-  $on(id: string, callback: () => void) {
+  $on(id: string, callback: (...params: any[]) => void) {
     this.bus[id] = callback;
   }
 
