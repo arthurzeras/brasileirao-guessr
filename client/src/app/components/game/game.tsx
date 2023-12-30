@@ -2,11 +2,11 @@
 
 import TipCard from "./tip-card";
 import GameEnd from "./game-end";
-import { storage } from "../storage";
-import XMarkIcon from "./icons/x-mark";
+import { storage } from "@/app/storage";
+import XMarkIcon from "../icons/x-mark";
 import AnswerForm from "./answer-form";
 import { useEffect, useState } from "react";
-import { getDailyGame, GetDailyGameResponse } from "../actions";
+import { getDailyGame, GetDailyGameResponse } from "@/app/actions";
 
 const TOTAL_ATTEMPTS = 5;
 

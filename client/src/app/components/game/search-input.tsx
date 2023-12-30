@@ -1,8 +1,8 @@
 "use client";
 
-import EventBus from "../bus";
+import EventBus from "@/app/bus";
 import { useEffect, useRef, useState } from "react";
-import { getDailyGame, GetDailyGameResponse } from "../actions";
+import { getDailyGame, GetDailyGameResponse } from "@/app/actions";
 
 interface SearchInputProps {
   teamChanged: (team: string) => void;

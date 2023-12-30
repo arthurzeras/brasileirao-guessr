@@ -1,4 +1,4 @@
-import { GetDailyGameResponse } from "../actions";
+import { GetDailyGameResponse } from "@/app/actions";
 
 interface TipCardProps {
   tipNumber: number;

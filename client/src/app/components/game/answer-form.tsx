@@ -1,6 +1,6 @@
 "use client";
 
-import EventBus from "../bus";
+import EventBus from "@/app/bus";
 import { useState } from "react";
 import SearchInput from "./search-input";
 
@@ -19,7 +19,7 @@ function SubmitButton({ disabled, onClick }: SubmitButtonProps) {
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className="w-full mt-2 text-center bg-green-500 border-green-600 disabled:bg-green-200 disabled:border-green-300 disabled:cursor-not-allowed hover:bg-green-700 border h-12 px-4 rounded-md shadow-sm font-medium"
+      className="submit-button"
     >
       ENVIAR
     </button>
