@@ -64,3 +64,20 @@ export async function getDailyGame(): Promise<
 
   return result;
 }
+
+export async function getSpecificDayGame(
+  day: string,
+): Promise<GetDailyGameResponse | GetDailyGameError> {
+  const url = process.env.DAY_GAME_ENDPOINT || "";
+  const response = await fetch(`${url}?day=${day}`);
+
+  if (!response.ok) {
+    const error = await response.json();
+    return {
+      failed: true,
+      message: error.message || `Failed to get game for day ${day}`,
+    };
+  }
+
+  return response.json();
+}
