@@ -25,3 +25,9 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+
+@layer components {
+  .link-primary {
+    @apply text-center block mx-auto bg-green-500 border-green-600 px-4 py-1 rounded shadow-sm hover:bg-green-600;
+  }
+}
