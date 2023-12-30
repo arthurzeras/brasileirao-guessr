@@ -1,68 +1,53 @@
-"use client";
-
 import TipCard from "./tip-card";
 import GameEnd from "./game-end";
-import { storage } from "@/app/storage";
-import XMarkIcon from "../icons/x-mark";
 import AnswerForm from "./answer-form";
+import XMarkIcon from "../icons/x-mark";
 import { useEffect, useState } from "react";
-import { getDailyGame, GetDailyGameResponse } from "@/app/actions";
+import useStorage from "@/app/hooks/use-storage";
+import { GetDailyGameResponse } from "@/app/actions";
 
 const TOTAL_ATTEMPTS = 5;
 
-export default function Game() {
+interface GameProps {
+  dayGame: GetDailyGameResponse;
+}
+
+export default function Game({ dayGame }: GameProps) {
   const [gameWin, setGameWin] = useState(false);
   const [gameOver, setGameOver] = useState(false);
-  const [dailyGame, setDailyGame] = useState<GetDailyGameResponse>();
   const [teamsAttempted, setTeamsAttempted] = useState<string[]>([]);
   const [shareButtonClicked, setShareButtonClicked] = useState(false);
   const [remainingAttempts, setRemainingAttempts] = useState(TOTAL_ATTEMPTS);
 
-  useEffect(() => {
-    getDailyGame().then((response) => {
-      if ("failed" in response) {
-        console.error(response.message);
-        return;
-      }
+  const { saveAnswerInStorage, getStorageValuesToSetState } = useStorage(
+    dayGame.game.day,
+  );
 
-      setDailyGame(response);
+  useEffect(() => {
+    getStorageValuesToSetState((values) => {
+      setGameWin(values.gameWin || false);
+      setGameOver(values.gameOver || false);
+      setTeamsAttempted(values.teamsAttempted || []);
+      setRemainingAttempts(values.remainingAttempts || TOTAL_ATTEMPTS);
     });
-  }, []);
-
-  useEffect(() => {
-    if (dailyGame) {
-      storage.saveAnswer({
-        gameWin,
-        gameOver,
-        teamsAttempted,
-        remainingAttempts,
-        day: dailyGame.game.day,
-      });
-    }
-  });
-
-  useEffect(() => {
-    const storageValues = storage.getToday();
-    if (storageValues) {
-      setGameWin(storageValues.gameWin);
-      setGameOver(storageValues.gameOver);
-      setTeamsAttempted(storageValues.teamsAttempted);
-      setRemainingAttempts(storageValues.remainingAttempts);
-    }
-  }, [setGameWin, setGameOver, setTeamsAttempted, setRemainingAttempts]);
+  }, []); /* eslint-disable-line */
 
   function checkAnswer(answer: string) {
-    if (answer === dailyGame?.game?.team) {
+    if (answer === dayGame.game.team) {
       setGameWin(true);
+      saveAnswerInStorage({ gameWin: true });
       return;
     }
 
+    setGameOver(remainingAttempts === 0);
     setRemainingAttempts(remainingAttempts - 1);
     setTeamsAttempted([...teamsAttempted, answer]);
 
-    if (remainingAttempts === 0) {
-      setGameOver(true);
-    }
+    saveAnswerInStorage({
+      gameOver: remainingAttempts === 0,
+      remainingAttempts: remainingAttempts - 1,
+      teamsAttempted: [...teamsAttempted, answer],
+    });
   }
 
   function renderTips() {
@@ -75,7 +60,7 @@ export default function Game() {
 
     const tipsList = () => {
       return Array.from({ length: arrayLength }).map((_, index) => (
-        <TipCard key={index} tipNumber={index + 1} dailyGame={dailyGame} />
+        <TipCard key={index} tipNumber={index + 1} dailyGame={dayGame} />
       ));
     };
 
@@ -189,11 +174,11 @@ export default function Game() {
 
   function renderGame() {
     if (gameOver) {
-      return <GameEnd answer={dailyGame?.game.team || ""} correct={false} />;
+      return <GameEnd answer={dayGame.game.team || ""} correct={false} />;
     }
 
     if (gameWin) {
-      return <GameEnd answer={dailyGame?.game.team || ""} correct={true} />;
+      return <GameEnd answer={dayGame.game.team || ""} correct={true} />;
     }
 
     return (

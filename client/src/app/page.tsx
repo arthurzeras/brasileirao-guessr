@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { getDailyGame } from "./actions";
-import Game from "./components/game/game";
+import TodayGame from "./components/game/today-game";
 import TodayGameCard from "./components/day-game-card/today-game-card";
 
 export default async function Home() {
@@ -9,7 +9,7 @@ export default async function Home() {
   return (
     <>
       <TodayGameCard />
-      <Game />
+      <TodayGame />
       <Link href="/previous-games" className="link-primary">
         Jogos anteriores
       </Link>
