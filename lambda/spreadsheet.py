@@ -86,22 +86,26 @@ class Spreadsheet:
 
         self.content = self.__format_values(response.json())
 
-    def get_day_values(self, day):
+    def get_day_values(self, day=None, number=None):
         """
         Get daily game filtered by day expression in format DD/MM/YYYY
+        or game number
         """
         days = list(self.content.keys())
 
         if not len(days):
             raise SpreadsheetException("No values found")
 
-        if not day:
+        if not day or not number:
             # Convert to America/SaoPaulo timezone
             today = datetime.now() - timedelta(hours=3)
             day = today.strftime("%d/%m/%Y")
 
+        if number:
+            day = days[int(number) - 1]
+
         if day not in days:
-            raise SpreadsheetException("Invalid day")
+            raise SpreadsheetException("Invalid day or number")
 
         game_number = days.index(day) + 1
 

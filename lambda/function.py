@@ -8,26 +8,27 @@ logger = logging.getLogger()
 logger.setLevel("INFO")
 
 
-def get_day_filter(event):
-    day_filter = None
+def get_filter(event, filter_name):
+    query_filter = None
     query_string_params = event.get("queryStringParameters", {})
 
     if query_string_params:
-        day_filter = query_string_params.get("day")
+        query_filter = query_string_params.get(filter_name)
 
     # This will evaluates to true only running the container locally
-    if "day" in event:
-        day_filter = event.get("day")
+    if filter_name in event:
+        query_filter = event.get(filter_name)
 
-    return day_filter
+    return query_filter
 
 
 def handler(event, context):
-    day_filter = get_day_filter(event)
+    day_filter = get_filter(event, "day")
+    number_filter = get_filter(event, "number")
 
     try:
         spreadsheet = Spreadsheet()
-        response = spreadsheet.get_day_values(day_filter)
+        response = spreadsheet.get_day_values(day_filter, number_filter)
         all_teams = spreadsheet.get_all_available_teams()
         logger.info(f"Response: {response}")
 
