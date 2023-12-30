@@ -31,7 +31,7 @@ export default function AnswerForm({ answerReceived }: AnswerFormProps) {
 
   const submitHandler = () => {
     answerReceived(teamSelected);
-    EventBus.$emit("ANSWER_SUBMITED", { team: teamSelected });
+    EventBus.$emit("ANSWER_SUBMITTED", { team: teamSelected });
   };
 
   return (

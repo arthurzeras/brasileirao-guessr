@@ -28,7 +28,7 @@ export default function SearchInput({ teamChanged }: SearchInputProps) {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [teamsFiltered, setTeamsFiltered] = useState<string[]>([]);
 
-  EventBus.$on("ANSWER_SUBMITED", ({ team }: { team: string }) => {
+  EventBus.$on("ANSWER_SUBMITTED", ({ team }: { team: string }) => {
     teamChanged("");
     setInputValue("");
     setTeamsFiltered(teamsFiltered.filter((_team) => _team !== team));
