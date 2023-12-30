@@ -48,36 +48,44 @@ function revalidateCache(result: GetDailyGameResponse) {
 export async function getDailyGame(): Promise<
   GetDailyGameResponse | GetDailyGameError
 > {
-  const response = await fetch(process.env.DAY_GAME_ENDPOINT || "");
+  try {
+    const response = await fetch(process.env.DAY_GAME_ENDPOINT || "");
 
-  if (!response.ok) {
-    const error = await response.json();
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error);
+    }
+
+    const result = await response.json();
+
+    revalidateCache(result);
+
+    return result;
+  } catch (error: any) {
     return {
       failed: true,
       message: error.message || "Failed to get daily game",
     };
   }
-
-  const result = await response.json();
-
-  revalidateCache(result);
-
-  return result;
 }
 
 export async function getSpecificDayGame(
   number: string,
 ): Promise<GetDailyGameResponse | GetDailyGameError> {
   const url = process.env.DAY_GAME_ENDPOINT || "";
-  const response = await fetch(`${url}?number=${number}`);
+  try {
+    const response = await fetch(`${url}?number=${number}`);
 
-  if (!response.ok) {
-    const error = await response.json();
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error);
+    }
+
+    return response.json();
+  } catch (error: any) {
     return {
       failed: true,
       message: error.message || `Failed to get game #${number}`,
     };
   }
-
-  return response.json();
 }
