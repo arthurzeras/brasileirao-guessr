@@ -10,6 +10,7 @@ export interface GetDailyGameResponse {
     year: string;
     state: string;
     position: string;
+    game_number: number;
     foundation_year: string;
     top_scorer: {
       name: string;

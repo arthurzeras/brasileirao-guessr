@@ -90,7 +90,9 @@ class Spreadsheet:
         """
         Get daily game filtered by day expression in format DD/MM/YYYY
         """
-        if not len(self.content.keys()):
+        days = list(self.content.keys())
+
+        if not len(days):
             raise SpreadsheetException("No values found")
 
         if not day:
@@ -98,10 +100,16 @@ class Spreadsheet:
             today = datetime.now() - timedelta(hours=3)
             day = today.strftime("%d/%m/%Y")
 
-        if day not in self.content.keys():
+        if day not in days:
             raise SpreadsheetException("Invalid day")
 
-        return {"day": day, **self.content.get(day)}
+        game_number = days.index(day) + 1
+
+        return {
+            "day": day,
+            "game_number": game_number,
+            **self.content.get(day),
+        }
 
     def get_all_available_teams(self):
         """
