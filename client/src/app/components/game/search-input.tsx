@@ -1,8 +1,9 @@
 "use client";
 
 import EventBus from "@/app/bus";
+import { storage } from "@/app/storage";
 import { useEffect, useRef, useState } from "react";
-import { getDailyGame, GetDailyGameResponse } from "@/app/actions";
+import { getDailyGame, getSpecificDayGame } from "@/app/actions";
 
 interface SearchInputProps {
   teamChanged: (team: string) => void;
@@ -20,7 +21,7 @@ const removeSpecialCharacter = (str: string) => {
 };
 
 export default function SearchInput({ teamChanged }: SearchInputProps) {
-  const dailyGame = useRef<GetDailyGameResponse>();
+  const allTeams = useRef<string[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const [loading, setLoading] = useState(true);
@@ -35,15 +36,33 @@ export default function SearchInput({ teamChanged }: SearchInputProps) {
   });
 
   useEffect(() => {
-    getDailyGame()
+    const gameNumber = window.location.pathname.at(-1) || "";
+
+    const getDayAction = Number.isNaN(Number(gameNumber))
+      ? getDailyGame()
+      : getSpecificDayGame(gameNumber);
+
+    getDayAction
       .then((response) => {
         if ("failed" in response) {
           console.error(response.message);
           return;
         }
 
-        dailyGame.current = response;
-        setTeamsFiltered((dailyGame.current?.all_teams || []).sort());
+        const _allTeams = (response.all_teams || []).sort();
+        const storageValues = storage.getDay(response.game.day);
+
+        allTeams.current = _allTeams;
+
+        if (storageValues) {
+          (storageValues.teamsAttempted || []).forEach((team) => {
+            setTeamsFiltered(_allTeams.filter((_team) => _team !== team));
+          });
+
+          return;
+        }
+
+        setTeamsFiltered(_allTeams);
       })
       .finally(() => setLoading(false));
   }, []);
@@ -64,14 +83,14 @@ export default function SearchInput({ teamChanged }: SearchInputProps) {
   const filterTeams = (value: string) => {
     setInputValue(value);
 
-    let filteredTeams = (dailyGame.current?.all_teams || []).filter((team) => {
+    let filteredTeams = allTeams.current.filter((team) => {
       const teamName = removeSpecialCharacter(team);
       const inputValue = removeSpecialCharacter(value);
       return new RegExp(inputValue, "gi").test(teamName);
     });
 
     if (filteredTeams.length === 0) {
-      filteredTeams = dailyGame.current?.all_teams || [];
+      filteredTeams = allTeams.current;
     }
 
     setTeamsFiltered(filteredTeams.sort());
