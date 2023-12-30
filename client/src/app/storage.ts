@@ -1,6 +1,6 @@
 export const STORAGE_ID_KEY = "brasileirao-guessr-status";
 
-interface ValuesInStorage {
+export interface ValuesInStorage {
   day: string;
   gameWin: boolean;
   gameOver: boolean;
@@ -23,8 +23,8 @@ export const storage = {
   getDay: (day: string) => {
     const values = storage.get();
 
-    if (!(day in Object.keys(values))) {
-      return {};
+    if (!Object.keys(values).includes(day)) {
+      return;
     }
 
     return storage.get()[day];
