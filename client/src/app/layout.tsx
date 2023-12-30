@@ -26,6 +26,10 @@ export default function RootLayout({
             </h1>
 
             {children}
+
+            <Link href="/previous-games" className="link-primary">
+              Jogos anteriores
+            </Link>
           </section>
         </main>
       </body>
