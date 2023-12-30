@@ -4,11 +4,11 @@ import Game from "./game";
 import { useEffect, useState } from "react";
 import { getSpecificDayGame, GetDailyGameResponse } from "@/app/actions";
 
-export default function PastGame({ day }: { day: string }) {
+export default function PastGame({ number }: { number: string }) {
   const [dayGame, setDayGame] = useState<GetDailyGameResponse>();
 
   useEffect(() => {
-    getSpecificDayGame(day).then((response) => {
+    getSpecificDayGame(number).then((response) => {
       if ("failed" in response) {
         console.error(response.message);
         return;
@@ -16,7 +16,7 @@ export default function PastGame({ day }: { day: string }) {
 
       setDayGame(response);
     });
-  }, [day]);
+  }, [number]);
 
   if (!dayGame) {
     return <div className="text-center">Carregando...</div>;
