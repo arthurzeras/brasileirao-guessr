@@ -1,11 +1,16 @@
 import Link from "next/link";
+import { getDailyGame } from "@/app/actions";
 import GridCard from "./components/grid-card";
 
-export default function PreviousGames() {
+export default async function PreviousGames() {
+  const todayGame = await getDailyGame();
+
   function renderGridCards() {
-    return [...Array(150)].map((_, index) => (
-      <GridCard key={index} number={index} />
-    ));
+    if ("game" in todayGame) {
+      return [...Array(todayGame.game.game_number - 1)].map((_, index) => (
+        <GridCard key={index + 1} number={index + 1} />
+      ));
+    }
   }
 
   return (
