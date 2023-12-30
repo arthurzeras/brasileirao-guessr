@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getDailyGame } from "@/app/actions";
+import PastGame from "@/app/components/game/past-game";
 import PastGameCard from "@/app/components/day-game-card/past-game-card";
 
 interface PreviousGameProps {
@@ -21,6 +22,7 @@ export default async function PreviousGame({ params }: PreviousGameProps) {
   return (
     <>
       <PastGameCard day={currentGameDay} />
+      <PastGame day={currentGameDay} />
       <Link href="/previous-games" className="link-primary">
         Jogos anteriores
       </Link>
