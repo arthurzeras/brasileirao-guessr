@@ -28,6 +28,6 @@ body {
 
 @layer components {
   .link-primary {
-    @apply text-center block mx-auto bg-green-500 border-green-600 px-4 py-1 rounded shadow-sm hover:bg-green-600;
+    @apply text-center block mx-auto bg-slate-300 border border-slate-400 px-4 py-1 rounded shadow-md hover:bg-slate-400;
   }
 }
