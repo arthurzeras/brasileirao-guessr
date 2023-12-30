@@ -96,13 +96,24 @@ class Spreadsheet:
         if not len(days):
             raise SpreadsheetException("No values found")
 
-        if not day or not number:
-            # Convert to America/SaoPaulo timezone
-            today = datetime.now() - timedelta(hours=3)
-            day = today.strftime("%d/%m/%Y")
+        # Convert to America/SaoPaulo timezone
+        today = (datetime.now() - timedelta(hours=3)).strftime("%d/%m/%Y")
+
+        # Remove games after today from list to avoid getting them
+        days = days[: days.index(today)]
+        days.append(today)
+
+        if not day:
+            day = today
 
         if number:
-            day = days[int(number) - 1]
+            try:
+                if int(number) > len(days):
+                    raise SpreadsheetException("Invalid number")
+
+                day = days[int(number) - 1]
+            except ValueError:
+                raise SpreadsheetException("Invalid number")
 
         if day not in days:
             raise SpreadsheetException("Invalid day or number")
