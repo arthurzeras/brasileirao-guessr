@@ -1,6 +1,7 @@
+import "./globals.css";
+import Link from "next/link";
 import type { Metadata } from "next";
 import { Jost } from "next/font/google";
-import "./globals.css";
 
 const jostFont = Jost({ subsets: ["latin"] });
 
@@ -21,7 +22,7 @@ export default function RootLayout({
         <main className="flex justify-center h-screen">
           <section className="flex flex-col gap-4 h-screen w-full md:w-[34rem] py-8 px-4 md:px-0">
             <h1 className="text-3xl font-medium text-center">
-              ⚽ Brasileirão Guessr
+              <Link href="/">⚽ Brasileirão Guessr </Link>
             </h1>
 
             {children}

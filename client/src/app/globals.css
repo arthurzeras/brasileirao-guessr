@@ -29,16 +29,12 @@ body {
 @layer components {
   .link-primary {
     @apply text-center
-      border
       block
       px-4
       py-1
       mx-auto
-      rounded
-      shadow-md
-      bg-slate-300
-      border-slate-400
-      hover:bg-slate-400;
+      underline
+      text-slate-500;
   }
 
   .submit-button {
