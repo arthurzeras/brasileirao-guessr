@@ -23,7 +23,7 @@ export default function RootLayout({
         <main className="flex justify-center h-screen overflow-y-auto">
           <section className="flex flex-col gap-4 h-screen w-full md:w-[34rem] py-8 px-4 md:px-0 relative">
             <HeadButtons />
-            <h1 className="text-3xl font-medium text-center">
+            <h1 className="text-3xl font-medium text-center mt-4 md:mt-0">
               <Link href="/">⚽ Brasileirão Guessr </Link>
             </h1>
 
