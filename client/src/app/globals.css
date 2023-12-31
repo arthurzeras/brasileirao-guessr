@@ -27,6 +27,20 @@ body {
 }
 
 @layer components {
+  .layout-section {
+    @apply flex
+    py-8
+    px-4
+    gap-4
+    w-full
+    md:px-0
+    flex-col
+    h-screen
+    relative
+    md:w-[34rem]
+    overflow-y-auto;
+  }
+
   .link-primary {
     @apply text-center
       block
