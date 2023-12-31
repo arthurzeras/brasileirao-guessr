@@ -16,11 +16,24 @@ export default function TipCard({ tipNumber, dailyGame }: TipCardProps) {
     const topScorer = dailyGame.game.top_scorer;
     const lastLeague = dailyGame.game.last_league_postion;
 
+    const hasManyTopWins = topWin.against_to.includes(" e ");
+    const topWinConnector = hasManyTopWins ? "de: " : "do(a)";
+
+    const hasManyTopScorers = topScorer.name.includes(" e ");
+    const topScorerString = [
+      hasManyTopScorers ? "Os" : "O",
+      hasManyTopScorers ? "artilheiros" : "artilheiro",
+      "desse time nesse ano",
+      hasManyTopScorers ? "foram" : "foi o",
+      `${topScorer.name} com ${topScorer.goals} gols marcados`,
+      hasManyTopScorers ? "cada" : "",
+    ];
+
     const tips = [
-      `A maior goleada desse time foi um ${topWin.goals_scored}x${topWin.goals_conceded} em cima do(a) ${topWin.against_to}`,
+      `A maior goleada desse time foi de ${topWin.goals_scored}x${topWin.goals_conceded} em cima ${topWinConnector} ${topWin.against_to}`,
       `No ano anterior (${year - 1}), esse time ficou na ${lastLeague.position}º posição do Brasileirão Série ${lastLeague.division}`, // prettier-ignore
       `Esse time foi fundado no ano de ${dailyGame.game.foundation_year}`,
-      `O artilheiro desse time nesse ano foi o ${topScorer.name} com ${topScorer.goals} gols marcados`,
+      topScorerString.join(" "),
       `Esse time é do estado do(a) ${dailyGame.game.state}`,
     ];
 
