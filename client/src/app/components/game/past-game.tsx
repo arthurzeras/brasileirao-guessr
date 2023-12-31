@@ -24,7 +24,7 @@ export default function PastGame({ number }: { number: string }) {
   }
 
   if (!dayGame) {
-    return <div className="text-center">Carregando...</div>;
+    return;
   }
 
   return <Game dayGame={dayGame} />;
