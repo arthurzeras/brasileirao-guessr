@@ -9,8 +9,7 @@ export default function TodayGame() {
 
   useEffect(() => {
     getDailyGame().then((response) => {
-      if ("failed" in response) {
-        console.error(response.message);
+      if (!response || "failed" in response) {
         return;
       }
 

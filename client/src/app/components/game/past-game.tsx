@@ -10,7 +10,7 @@ export default function PastGame({ number }: { number: string }) {
 
   useEffect(() => {
     getSpecificDayGame(number).then((response) => {
-      if ("failed" in response) {
+      if (!response || "failed" in response) {
         setError(true);
         return;
       }

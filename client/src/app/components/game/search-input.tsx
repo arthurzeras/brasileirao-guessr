@@ -44,8 +44,7 @@ export default function SearchInput({ teamChanged }: SearchInputProps) {
 
     getDayAction
       .then((response) => {
-        if ("failed" in response) {
-          console.error(response.message);
+        if (!response || "failed" in response) {
           return;
         }
 
