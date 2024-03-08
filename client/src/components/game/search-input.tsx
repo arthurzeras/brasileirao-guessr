@@ -1,10 +1,12 @@
 "use client";
+
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
 import EventBus from "@/bus";
 import { storage } from "@/storage";
-import { removeSpecialCharacter } from "@/utis";
 import { getDailyGame, getSpecificDayGame } from "@/actions";
+import { getTeamNameSlug, removeSpecialCharacter } from "@/utis";
 
 interface SearchInputProps {
   teamChanged: (team: string) => void;
@@ -116,9 +118,18 @@ export default function SearchInput({ teamChanged }: SearchInputProps) {
       <li
         key={team}
         onClick={() => selectTeam(team)}
-        className="p-2 hover:bg-slate-100 cursor-pointer"
+        className="p-2 hover:bg-slate-100 cursor-pointer flex flex-row items-center gap-2"
       >
-        {team}
+        <div className="h-8 w-8 relative">
+          <Image
+            fill
+            alt={`Escudo do(a) ${team}`}
+            className="object-cover relative"
+            sizes="40px"
+            src={`/images/logos/${getTeamNameSlug(team)}.png`}
+          />
+        </div>
+        <span>{team}</span>
       </li>
     ));
 

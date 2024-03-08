@@ -1,3 +1,6 @@
+import Image from "next/image";
+
+import { getTeamNameSlug } from "@/utis";
 interface GameEndInterface {
   answer: string;
   correct: boolean;
@@ -32,6 +35,18 @@ export default function GameEnd({ answer, correct }: GameEndInterface) {
     <section className={cardClasses}>
       {mainLabel()}
       <div className="my-2">{labelInfo}</div>
+
+      <div className="h-28 w-28 relative block mx-auto mb-2">
+        <Image
+          fill
+          priority
+          sizes="100px"
+          alt={`Escudo do(a) ${answer}`}
+          className="object-cover relative"
+          src={`/images/logos/${getTeamNameSlug(answer)}.png`}
+        />
+      </div>
+
       <div className="text-2xl font-medium">{answer}</div>
     </section>
   );
