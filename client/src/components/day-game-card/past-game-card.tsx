@@ -1,5 +1,6 @@
 import DayGameCard from "./day-game-card";
 import { getSpecificDayGame } from "@/actions";
+import ButtonReloadPage from "../game/button-reload-page";
 
 export default async function PastGameCard({ number }: { number: string }) {
   const result = await getSpecificDayGame(number);
@@ -16,10 +17,7 @@ export default async function PastGameCard({ number }: { number: string }) {
         <div className="text-center text-red-600 text-lg font-medium">
           Não foi possível carregar as informações do jogo.
         </div>
-        <div
-          className="text-center shadow-md rounded-md py-1 mt-2 px-4 border bg-slate-300 border-slate-500"
-          dangerouslySetInnerHTML={{ __html: reloadButton }}
-        />
+        <ButtonReloadPage />
       </div>
     );
   }
