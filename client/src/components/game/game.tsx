@@ -1,11 +1,12 @@
+import { useEffect, useState } from "react";
+
 import TipCard from "./tip-card";
 import GameEnd from "./game-end";
 import AnswerForm from "./answer-form";
 import XMarkIcon from "../icons/x-mark";
 import ShareButton from "./share-button";
-import { useEffect, useState } from "react";
-import useStorage from "@/app/hooks/use-storage";
-import { GetDailyGameResponse } from "@/app/actions";
+import useStorage from "@/hooks/use-storage";
+import { GetDailyGameResponse } from "@/actions";
 
 const TOTAL_ATTEMPTS = 5;
 

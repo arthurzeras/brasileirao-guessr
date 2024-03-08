@@ -1,6 +1,7 @@
-import PastGame from "@/app/components/game/past-game";
-import PastGameCard from "@/app/components/day-game-card/past-game-card";
 import { Suspense } from "react";
+
+import PastGame from "@/components/game/past-game";
+import PastGameCard from "@/components/day-game-card/past-game-card";
 
 interface PreviousGameProps {
   params: { id: string };

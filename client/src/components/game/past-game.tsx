@@ -1,8 +1,8 @@
 "use client";
+import { useEffect, useState } from "react";
 
 import Game from "./game";
-import { useEffect, useState } from "react";
-import { getSpecificDayGame, GetDailyGameResponse } from "@/app/actions";
+import { getSpecificDayGame, GetDailyGameResponse } from "@/actions";
 
 export default function PastGame({ number }: { number: string }) {
   const [error, setError] = useState(false);

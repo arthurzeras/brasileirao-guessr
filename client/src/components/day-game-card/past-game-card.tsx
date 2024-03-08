@@ -1,5 +1,5 @@
 import DayGameCard from "./day-game-card";
-import { getSpecificDayGame } from "@/app/actions";
+import { getSpecificDayGame } from "@/actions";
 
 export default async function PastGameCard({ number }: { number: string }) {
   const result = await getSpecificDayGame(number);

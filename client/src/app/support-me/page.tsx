@@ -1,4 +1,5 @@
 import Link from "next/link";
+
 import ClipboardButton from "./clipboard-button";
 
 export default function PageSupportMe() {

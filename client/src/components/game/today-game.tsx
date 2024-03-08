@@ -1,8 +1,8 @@
 "use client";
+import { useEffect, useState } from "react";
 
 import Game from "./game";
-import { useEffect, useState } from "react";
-import { getDailyGame, GetDailyGameResponse } from "@/app/actions";
+import { getDailyGame, GetDailyGameResponse } from "@/actions";
 
 export default function TodayGame() {
   const [dailyGame, setDailyGame] = useState<GetDailyGameResponse>();

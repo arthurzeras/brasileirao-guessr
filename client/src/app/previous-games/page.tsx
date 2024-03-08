@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { getDailyGame } from "@/app/actions";
+
+import { getDailyGame } from "@/actions";
 import GridCard from "./components/grid-card";
 
 export default async function PreviousGames() {

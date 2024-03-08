@@ -1,5 +1,5 @@
+import { getDailyGame } from "@/actions";
 import DayGameCard from "./day-game-card";
-import { getDailyGame } from "@/app/actions";
 
 export default async function DailyGameCard() {
   const result = await getDailyGame();

@@ -1,9 +1,10 @@
-import "./globals.css";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { Jost } from "next/font/google";
-import NextGame from "./components/next-game";
-import HeadButtons from "./components/head-buttons";
+
+import "./globals.css";
+import NextGame from "../components/next-game";
+import HeadButtons from "../components/head-buttons";
 
 const jostFont = Jost({ subsets: ["latin"] });
 

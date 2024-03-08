@@ -1,7 +1,8 @@
 "use client";
 
-import EventBus from "@/app/bus";
 import { useState } from "react";
+
+import EventBus from "@/bus";
 import SearchInput from "./search-input";
 
 interface AnswerFormProps {

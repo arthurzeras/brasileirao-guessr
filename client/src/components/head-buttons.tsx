@@ -1,4 +1,5 @@
 import Link from "next/link";
+
 import HeartIcon from "./icons/heart";
 import InformationCircle from "./icons/information-circle";
 import QuestionMarkCircle from "./icons/question-mark-circle";
