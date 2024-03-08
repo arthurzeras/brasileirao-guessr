@@ -28,10 +28,14 @@ export default function SearchInput({ teamChanged }: SearchInputProps) {
   const [inputValue, setInputValue] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [teamsFiltered, setTeamsFiltered] = useState<string[]>([]);
+  const [teamsAttemptedInStorage, setTeamsAttemptedInStorage] = useState<
+    string[]
+  >([]);
 
   EventBus.$on("ANSWER_SUBMITTED", ({ team }: { team: string }) => {
     teamChanged("");
     setInputValue("");
+    setTeamsAttemptedInStorage([...teamsAttemptedInStorage, team]);
     setTeamsFiltered(teamsFiltered.filter((_team) => _team !== team));
   });
 
@@ -48,20 +52,28 @@ export default function SearchInput({ teamChanged }: SearchInputProps) {
           return;
         }
 
-        const _allTeams = (response.all_teams || []).sort();
+        const allTeamsFromResponse = (response.all_teams || []).sort();
         const storageValues = storage.getDay(response.game.day);
 
-        allTeams.current = _allTeams;
+        allTeams.current = allTeamsFromResponse;
 
         if (storageValues) {
-          (storageValues.teamsAttempted || []).forEach((team) => {
-            setTeamsFiltered(_allTeams.filter((_team) => _team !== team));
+          const storageTeamsAttempted = storageValues.teamsAttempted || [];
+
+          setTeamsAttemptedInStorage(storageTeamsAttempted);
+
+          storageTeamsAttempted.forEach((team) => {
+            setTeamsFiltered(
+              allTeamsFromResponse.filter(
+                (teamFromResponse) => teamFromResponse !== team,
+              ),
+            );
           });
 
           return;
         }
 
-        setTeamsFiltered(_allTeams);
+        setTeamsFiltered(allTeamsFromResponse);
       })
       .finally(() => setLoading(false));
   }, []);
@@ -83,6 +95,10 @@ export default function SearchInput({ teamChanged }: SearchInputProps) {
     setInputValue(value);
 
     let filteredTeams = allTeams.current.filter((team) => {
+      if (teamsAttemptedInStorage.includes(team)) {
+        return;
+      }
+
       const teamName = removeSpecialCharacter(team);
       const inputValue = removeSpecialCharacter(value);
       return new RegExp(inputValue, "gi").test(teamName);
