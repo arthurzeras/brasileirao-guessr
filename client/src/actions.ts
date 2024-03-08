@@ -73,16 +73,26 @@ export async function getSpecificDayGame(
   number: string,
 ): Promise<GetDailyGameResponse | GetDailyGameError> {
   const url = process.env.DAY_GAME_ENDPOINT || "";
+
+  if (!url) {
+    console.error("The lambda function URL is empty");
+    return {
+      failed: true,
+      message: "Failed to get daily game",
+    };
+  }
+
   try {
     const response = await fetch(`${url}?number=${number}`);
 
     if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error);
+      throw new Error(await response.json());
     }
 
     return response.json();
   } catch (error: any) {
+    console.error(`Error on getSpecificDayGame: ${error.message}`);
+
     return {
       failed: true,
       message: error.message || `Failed to get game #${number}`,
