@@ -3,22 +3,16 @@ import { useEffect, useRef, useState } from "react";
 
 import EventBus from "@/bus";
 import { storage } from "@/storage";
+import { removeSpecialCharacter } from "@/utis";
 import { getDailyGame, getSpecificDayGame } from "@/actions";
 
 interface SearchInputProps {
   teamChanged: (team: string) => void;
 }
 
-const removeSpecialCharacter = (str: string) => {
-  return str
-    .replace(/[ãàá]/g, "a")
-    .replace(/[êé]/g, "e")
-    .replace(/í/g, "i")
-    .replace(/[õôó]/g, "o")
-    .replace(/ú/g, "u")
-    .replace(/ç/g, "c")
-    .replace(/[-\s]/, "");
-};
+function removeSpecialCharacterFromTeamName(teamName: string) {
+  return removeSpecialCharacter(teamName).replace(/[-\s]/, "");
+}
 
 export default function SearchInput({ teamChanged }: SearchInputProps) {
   const allTeams = useRef<string[]>([]);
@@ -99,8 +93,8 @@ export default function SearchInput({ teamChanged }: SearchInputProps) {
         return;
       }
 
-      const teamName = removeSpecialCharacter(team);
-      const inputValue = removeSpecialCharacter(value);
+      const teamName = removeSpecialCharacterFromTeamName(team);
+      const inputValue = removeSpecialCharacterFromTeamName(value);
       return new RegExp(inputValue, "gi").test(teamName);
     });
 
